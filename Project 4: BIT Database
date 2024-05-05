@@ -1,29 +1,35 @@
+#In this SQL, I am running query on a database with a series of tables to get information on order history and customer data
+
+#1-3. The first three queries are to show which columns are in the customers and January Sales, with the first two limited to 20 columns.
+
 SELECT * FROM BIT_DB.customers LIMIT 20;
 
 SELECT * FROM BIT_DB.jansales LIMIT 20;
 
 SELECT * FROM BIT_DB.customers;
 
+#4. What columns are in Jan Sales? Remove any 'messy' data
 SELECT COUNT(orderid)
 FROM BIT_DB.jansales 
 WHERE length (orderid) = 6
 AND orderid <> 'Order ID';
 
+#5. What columns are in Jan Sales with the product name of 'iPhone'; remove 'messy' data
 SELECT COUNT(orderid) 
 FROM BIT_DB.jansales
 WHERE Product = 'iPhone'
 AND length(orderid) = 6
 AND orderid <> 'Order ID';
 
-
+#6. Show all customer account numbers for orders placed in February
 SELECT distinct acctnum
 FROM BIT_DB.customers cust
-
 INNER JOIN BIT_DB.FebSales Feb
 ON cust.order_id=FEB.orderid
 WHERE length(orderid) = 6
 AND orderid <> 'Order ID';
 
+#7. What is the cheapest product sold in January?
 SELECT MIN (price)
 , Product
 FROM BIT_DB.Jansales
@@ -31,11 +37,13 @@ GROUP BY product, price
 ORDER BY price asc
 LIMIT 1;
 
+#8. What is the total revenue of each product that was sold in January?
 SELECT SUM (quantity)*price as revenue
 ,product
 FROM BIT_DB.Jansales 
 GROUP BY product;
 
+#9. What producs were sold in February, how many of each product and what was the total revenue of each product that was sold at 548 Lincoln St, Seattle WA 98101?
 SELECT sum(quantity),
 product,
 SUM(quantity)*price as Revenue
@@ -43,6 +51,7 @@ FROM BIT_DB.FebSales
 WHERE location = '548 Lincoln St, Seattle, WA 98101'
 GROUP BY product;
 
+#10. How many customers ordered more than two products and what was the average amount spent for the customers in the month of February?
 SELECT count(distinct cust.acctnum), 
 avg(quantity*price)
 FROM BIT_DB.Febsales AS Feb
